@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from sql_connection import get_sql_connection
 import mysql.connector
 import json
@@ -7,9 +7,14 @@ import products_dao
 import orders_dao
 import uom_dao
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../ui', static_url_path='')
 
 connection = get_sql_connection()
+
+@app.route('/')
+def index():
+    return send_from_directory('../ui', 'index.html')
+
 
 @app.route('/getUOM', methods=['GET'])
 def get_uom():
@@ -61,7 +66,10 @@ def delete_product():
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
+
+
+
 if __name__ == "__main__":
     print("Starting Python Flask Server For Grocery Store Management System")
-    app.run(port=5000)
+    app.run(debug=True)
 
